@@ -15,3 +15,12 @@ class EventList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class EventDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, Update & Destroy events.
+    """
+    serializer_class = EventSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = Event.objects.all()
