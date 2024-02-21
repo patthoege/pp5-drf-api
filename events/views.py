@@ -16,6 +16,17 @@ class EventList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    filter_backends = [
+        filters.SearchFilter,
+    ]
+
+    search_fields = [
+        'owner__username',
+        'title',
+        'place',
+        'category',
+    ]
+
 
 class EventDetail(generics.RetrieveUpdateDestroyAPIView):
     """
