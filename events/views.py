@@ -1,5 +1,6 @@
 from rest_framework import generics, permissions, filters
 from pp5_drf_api.permissions import IsOwnerOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Event
 from .serializers import EventSerializer
 
@@ -18,6 +19,11 @@ class EventList(generics.ListCreateAPIView):
 
     filter_backends = [
         filters.SearchFilter,
+        DjangoFilterBackend,
+    ]
+
+    filterset_fields = [
+        'saved__owner__profile'
     ]
 
     search_fields = [
