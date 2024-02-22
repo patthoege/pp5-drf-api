@@ -10,7 +10,7 @@ from .settings import (
 @api_view()
 def root_route(request):
     return Response({
-        "message": "Welcome to my PP5 Django Rest Framework API!"
+        "message": "Welcome to the ExposePX API!!"
     })
 
 # Code provided in DRF-API walkthrough.
