@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Event
+from saved.models import Save
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -10,6 +11,7 @@ class EventSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
+    save_id = serializers.SerializerMethodField()
 
     def get_is_owner(self, obj):
         """
@@ -18,10 +20,19 @@ class EventSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return request.user == obj.owner
 
+    def get_save_id(self, obj):
+            user = self.context['request'].user
+            if user.is_authenticated:
+                save = Save.objects.filter(
+                    owner = user, event = obj
+                ).first()
+                return save.id if save else None
+            return None
+
     class Meta:
         model = Event
         fields = [
             'id', 'owner', 'title', 'content', 'date', 'time', 
             'place', 'event_link', 'category', 'created_on', 'modified_on',
-            'is_owner', 'profile_id', 'profile_image',
+            'is_owner', 'profile_id', 'profile_image', 'save_id'
         ]
