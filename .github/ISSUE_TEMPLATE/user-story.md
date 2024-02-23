@@ -7,4 +7,4 @@ assignees: ''
 
 ---
 
-As a [role], I can [action], so that [goal].
+As a **role**, I can **action**, so that **goal**.
