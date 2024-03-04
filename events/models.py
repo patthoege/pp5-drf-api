@@ -19,9 +19,10 @@ class Event(models.Model):
 
     class Meta:
         """
-        Order events by date of event.
+        Order events by date created.
+        Display by most recent first.
         """
-        ordering = ['-date']
+        ordering = ['-created_on']
 
     def __str__(self):
         return f'{self.title} {self.date}'
