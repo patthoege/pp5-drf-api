@@ -3,6 +3,7 @@ from pp5_drf_api.permissions import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Event
 from .serializers import EventSerializer
+from django.db.models import Count
 
 
 class EventList(generics.ListCreateAPIView):
@@ -12,7 +13,9 @@ class EventList(generics.ListCreateAPIView):
     """
     serializer_class = EventSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Event.objects.all()
+    queryset = Event.objects.annotate(
+        saved_count =Count('saved', distinct=True)
+    ).order_by('-date')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -32,7 +35,11 @@ class EventList(generics.ListCreateAPIView):
         'place',
         'category',
     ]
-
+    
+    ordering_fields = [
+        'saved_count',
+        'saved__created_on',
+    ]
 
 class EventDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -40,4 +47,6 @@ class EventDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = EventSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Event.objects.all()
+    queryset = Event.objects.annotate(
+        saved_count=Count('saved', distinct=True)
+    ).order_by('-date')
