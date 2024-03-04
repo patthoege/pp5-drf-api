@@ -15,7 +15,7 @@ class EventList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Event.objects.annotate(
         saved_count =Count('saved', distinct=True)
-    ).order_by('-date')
+    ).order_by('-created_on')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -38,7 +38,7 @@ class EventList(generics.ListCreateAPIView):
     
     ordering_fields = [
         'saved_count',
-        'saved__created_on',
+        'created_on',
     ]
 
 class EventDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -49,4 +49,4 @@ class EventDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Event.objects.annotate(
         saved_count=Count('saved', distinct=True)
-    ).order_by('-date')
+    ).order_by('-created_on')
