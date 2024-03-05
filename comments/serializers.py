@@ -30,7 +30,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'owner', 'is_owner', 'profile_id', 'profile_image',
             'post', 'event', 'created_at', 'updated_at', 'content'
-        ],
+        ]
 
 
 # Class provided by DRF-API walkthrough.

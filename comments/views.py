@@ -22,6 +22,7 @@ class CommentList(generics.ListCreateAPIView):
 
     filterset_fields = [
         'post',
+        'event',
     ]
 
     def perform_create(self, serializer):
