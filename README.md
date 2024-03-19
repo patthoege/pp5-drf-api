@@ -8,13 +8,12 @@ This project was built as my final Advanced Frontend Portfolio submission for th
 
 #### DEPLOYED BACKEND API RENDER [LINK](https://p5-drf-api-50dd27c53894.herokuapp.com/)
 
-#### DEPLOYED FRONTEND RENDER [LINK - LIVE SITE]()
+#### DEPLOYED FRONTEND RENDER [LINK - LIVE SITE](https://exposurepx-e2816574e586.herokuapp.com/)
 #### DEPLOYED FRONTEND [REPOSITORY](https://github.com/patthoege/pp5-exposurep)
 
 ## Table of Contents
-+ [User Stories](#user-stories "User Stories")
-* [Database Schema](#database-schema)
 * [User Stories](#user-stories)
+* [Database Schema](#database-schema)
 * [Testing](#testing)
     * [Validators](#validators)
     * [Manual Testing](#manual-testing)
@@ -22,7 +21,7 @@ This project was built as my final Advanced Frontend Portfolio submission for th
     * [Unresolved](#unresolved)
 * [Technologies Used](#technologies-used)
     * [Main Languages Used](#main-languages-used)
-    * [Frameworks, Libraries & Programs Used](#frameworks-libraries-programs-used)
+    * [Frameworks, Libraries and Programs Used](#frameworks-libraries-and-programs-used)
 * [Project Setup](#project-setup)
 * [Deployment](#deployment)
 * [Credits](#credits)
@@ -31,10 +30,28 @@ This project was built as my final Advanced Frontend Portfolio submission for th
     * [Media](#media)
 
 ## User Stories
-I have included User Stories links to the [GitHub Issues](https://github.com/) for this project, as well as the [KANBAN board](https://github.com/).
+I have included User Stories links to the [GitHub Issues](https://github.com/patthoege/pp5-drf-api/issues?page=1&q=is%3Aissue+is%3Aopen) for this project, as well as the [KANBAN board](https://github.com/users/patthoege/projects/5/views/1).
+
+A full list of User stories can be found [HERE](static/USERSTORIES.md)
+
+[Back to top](<#table-of-contents>)
 
 ## Database Schema
 ![SQL Database model](/static/images-readme/models.drawio.png)
+
+[Back to top](<#table-of-contents>)
+
+## Testing
+
+### Validators
+All files passed through [PEP8](https://ww1.pep8online.com/) without error.
+
+<details><summary><b> PEP8 Validator Image</b></summary>
+
+![PEP8 Validator Image](docs/readme/images/)
+</details><br />
+
+[Back to top](<#table-of-contents>)
 
 ### **Manual Testing**
 
@@ -68,11 +85,20 @@ I have included User Stories links to the [GitHub Issues](https://github.com/) f
 | /saved/ | ✅ |
 | /saved/:id/ | ✅ |
 
+[Back to top](<#table-of-contents>)
+
 ## **Bugs**
+
+|| **Error** | **Issue** | **Solution** |
+|---|---|---|---|
+|**1**| Setting up the ProfilePage for users and rendering the posts followers, and following. But I'm having a problem displaying the `posts_count`, `followers_count`, and `following_count` from the profiles data. | Don't seem to be sending `posts_count`, `followers_count`, and `following_count` in the profile data. | In the Profile detail view, annotate the queryset with those additional fields. | |
+|**2**| When attempting to add a new field, `'event'`, to the comment model in my events app and running makemigrations, Django throws an error indicating that it can't add a non-nullable field without a default value. | Django requires a default value for the new non-nullable `'event'` field because it needs to populate existing comment objects with this field. Since there is no default specified, Django prompts for a solution. | Added `event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True)` to tell Django that the field can be null or it can be blank. |
+
+
 ### **Unresolved**
+- None
 
-- 
-
+[Back to top](<#table-of-contents>)
 
 ## **Technologies Used**
 
@@ -80,8 +106,7 @@ I have included User Stories links to the [GitHub Issues](https://github.com/) f
 
 - Python
 
-### **Frameworks, Libraries & Programs Used**
-
+### **Frameworks, Libraries and Programs Used**
 - Django
 - Django RestFramework
 - Cloudinary
@@ -92,13 +117,16 @@ I have included User Stories links to the [GitHub Issues](https://github.com/) f
 - Cors Headers
 - draw.io: is a free online diagram software for making flowcharts, process diagrams, org charts, UML, ER and network diagrams.
 
+[Back to top](<#table-of-contents>)
+
 ## **Project Setup**
 
 * Create a new repository using the Code Institute template repository.
-* Run the command pip3 install 'django<4' in the terminal to install Django.
-* Run the command django-admin startproject my_api . in the terminal.
-* Run the command pip install django-cloudinary-storage in the terminal to install Cloudinary Storage.
-* Run the command pip install Pillow - this library adds the image processing capabilities we need for this project.
+* Run the command **pip3 install 'django<4'** in the terminal to install Django.
+* Run the command **django-admin startproject my_api** . in the terminal to create a new app.
+* Run the command **python3 manage.py createsuperuser** . in the terminal to create a new super user to test functionality.
+* Run the command **pip install django-cloudinary-storage** in the terminal to install Cloudinary Storage.
+* Run the command **pip install Pillow** - this library adds the image processing capabilities we need for this project.
 * Once these dependencies are installed we need to add them to the "Installed apps" section in settings.py.
     * Note the placement and terms used for this input into installed apps:
 
@@ -110,34 +138,35 @@ I have included User Stories links to the [GitHub Issues](https://github.com/) f
 
 * Create an env.py file in the top directory.
     * Inside the env.py file, import the os module and set up the os.environ with the Cloudinary URL you can retrieve from the account you've set up.
-* In the settings.py file, set up a variable called "CLOUDINARY_STORAGE" and use the environment variable used to set up in the env.py file to declare this value.
-* Next, define the setting called "MEDIA_URL" and set it to "/media/" so the settings know where to store our image files.
-* Finally, define a variable called "DEFAULT_FILE_STORAGE" and set it to "MediaCloudinaryStorage".
+* In the settings.py file, set up a variable called **"CLOUDINARY_STORAGE"** and use the environment variable used to set up in the env.py file to declare this value.
+* Next, define the setting called **"MEDIA_URL"** and set it to "/media/" so the settings know where to store our image files.
+* Finally, define a variable called **"DEFAULT_FILE_STORAGE"** and set it to "MediaCloudinaryStorage".
 
+[Back to top](<#table-of-contents>)
 
 ## **Deployment**
 
 The first step of deployment is setting up the JWT tokens:
 * First install the package in the terminal window, using the command: 
     
-    *pip install dj-rest-auth==2.1.9*
+    `pip install dj-rest-auth==2.1.9`
 * In the settings.py file add the following to the "Installed Apps" section.
 
-    *'rest_framework.authtoken',*
+    `'rest_framework.authtoken',`
 
-    *'dj_rest_auth',*
+    `'dj_rest_auth',`
 
 * Next, add the following URLs to the urlpatterns list:
 
-    *path('dj-rest-auth/', include('dj_rest_auth.urls')),*
+    `path('dj-rest-auth/', include('dj_rest_auth.urls')),`
 
 * In the command terminal, migrate the database just added by typing:
 
-    *python manage.py migrate*
+    `python manage.py migrate`
 
 * Next we want to add the feature to enable the registration of users. Type the following into the terminal:
 
-    *pip install 'dj-rest-auth[with_social]'*
+    `pip install 'dj-rest-auth[with_social]'`
 
 * Add the following to the "Installed Apps" section in the settings.py file:
 
@@ -151,23 +180,23 @@ The first step of deployment is setting up the JWT tokens:
 
 * Add SITE_ID value, which is placed under INSTALLED APPS List:
 
-    *SITE_ID = 1*
+    `SITE_ID = 1`
 
 
 * Next add the registration URLs to the urlpatterns list, as follows:
 
-    *path('dj-rest-auth/registration/',* 
+    `path('dj-rest-auth/registration/',` 
 
-    *include('dj_rest_auth.registration.urls')),*
+    `include('dj_rest_auth.registration.urls')),`
 
 * Now add JWT tokens functionality: 
     * Install the djangorestframework-simplejwt package by typing the following into the terminal command window:
 
-        *pip install djangorestframework-simplejwt==5.3.1*
+        `pip install djangorestframework-simplejwt==5.3.1`
 
 * In the env.py file, create a session authentication value (differentiates between Dev and Prod mode):
 
-    *os.environ['DEV'] = '1'*
+    `os.environ['DEV'] = '1'`
 
 * In the settings.py file, use the Dev value above to differentiate between Dev and Prod Modes & add pagination which is placed under SITE_ID:
 
@@ -181,11 +210,11 @@ The first step of deployment is setting up the JWT tokens:
     ```
 * To enable token authentication, put the following under the above step:
 
-    *REST_USE_JWT = True*
+    `REST_USE_JWT = True`
 
 * To ensure tokens are sent over HTTPS only, add the following:
 
-    *JWT_AUTH_COOKIE = 'my-app-auth'*
+    `JWT_AUTH_COOKIE = 'my-app-auth'`
 
 * Next, declare cookie names for the access and refresh tokens by adding:
     ```
@@ -195,11 +224,11 @@ The first step of deployment is setting up the JWT tokens:
 
 * Create a new serializers.py file in the api folder. Then import the following files at the top of the new serializers file:
 
-    *from dj_rest_auth.serializers*
+    `from dj_rest_auth.serializers`
 
-    *import UserDetailsSerializer*
+    `import UserDetailsSerializer`
 
-    *from rest_framework import serializers*
+    `from rest_framework import serializers`
 
 * Next create the profile_id and profile_image fields:
     ```
@@ -211,9 +240,12 @@ The first step of deployment is setting up the JWT tokens:
     ```
 
 
-* Overwrite the default USER_DETAILS_SERIALIZER - Place below the JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token':
+* Overwrite the default USER_DETAILS_SERIALIZER - Place below the 
+    ```
+    JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token':
 
-    *REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER': 'drf_api.serializers.CurrentUserSerializer'}*
+    REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER': 'drf_api.serializers.CurrentUserSerializer'}
+    ```
 
 * Next, in the terminal command window:
 
@@ -231,9 +263,9 @@ The first step of deployment is setting up the JWT tokens:
 ### **Adding the root route:**
 * Create a views.py file in the API folder. Set up the imports in the views.py file:
 
-    *from rest_framework.decorators import api_view*
+    `from rest_framework.decorators import api_view`
 
-    *from rest_framework.response import Response*
+    `from rest_framework.response import Response`
 
 * Create root route and return custom message:
 
@@ -244,7 +276,7 @@ The first step of deployment is setting up the JWT tokens:
     ```
 * In the urls.py file, import:
 
-    *from .views import root_route*
+    `from .views import root_route`
 
 * Add the URL to urlpatterns list:
 
@@ -296,13 +328,13 @@ The first step of deployment is setting up the JWT tokens:
 
 * In the reply app, create the serializers.py app. Then set the imports up in the file:
     
-    *from django.contrib.humanize.templatetags.humanize import naturaltime*
+    `from django.contrib.humanize.templatetags.humanize import naturaltime`
 
 * Set fields within the ReplySerializer class:
 
-    *created_at = serializers.SerializerMethodField()*
+    `created_at = serializers.SerializerMethodField()`
 
-    *updated_at = serializers.SerializerMethodField()*
+    `updated_at = serializers.SerializerMethodField()`
 
 * Set methods, which are placed underneath fields:
 
@@ -343,11 +375,11 @@ The first step of deployment is setting up the JWT tokens:
 
 * Install dj_database_url by typing in the command terminal window:
 
-    *pip install dj_database_url*
+    `pip install dj_database_url`
 
 * In the settings.py file, import the following:
 
-    *import dj_database_url*
+    `import dj_database_url`
 
 * Separate the Dev and Prod Environments, as follows:
 
@@ -364,20 +396,20 @@ The first step of deployment is setting up the JWT tokens:
 
 * Next, install gunicorn. By typing in the command terminal:
 
-    *pip install gunicorn*
+    `pip install gunicorn`
 
 * Create Procfile (noting the capital "P"). Inside the file add:
     
-    *release: python manage.py makemigrations && python manage.py migrate*
+    `release: python manage.py makemigrations && python manage.py migrate`
 
-    *web: gunicorn drf_api.wsgi*
+    `web: gunicorn drf_api.wsgi`
 
 * In the settings.py, set the "ALLOWED_HOSTS" to:
 
-    *['<YOURAPPNAME>.herokuapp.com', 'localhost']*
+    `['<YOURAPPNAME>.herokuapp.com', 'localhost']`
 
 * In the command terminal, install CORS, by typing:
-    *pip install django-cors-headers*
+    `pip install django-cors-headers`
 
 * Then add to "INSTALLED_APPS" section in settings.py:
 
@@ -416,20 +448,20 @@ The first step of deployment is setting up the JWT tokens:
 
 * Allow Cookies and allow front end app and API be deployed to different platforms:
 
-    *CORS_ALLOW_CREDENTIALS = True*
-    *JWT_AUTH_SAMESITE = 'None'*
+    `CORS_ALLOW_CREDENTIALS = True`, 
+    `JWT_AUTH_SAMESITE = 'None'`
 
 * Set the remaining env variables:
 
-    *os.environ['SECRET_KEY'] = 'CreateRandomValue'*
+    `os.environ['SECRET_KEY'] = 'CreateRandomValue'`
 
 * In the settings.py file - replace the ‘insecure’ key with the environment variable:
 
-    *SECRET_KEY = os.environ.get('SECRET_KEY')*
+    `SECRET_KEY = os.environ.get('SECRET_KEY')`
 
 * Replace the DEBUG Setting to be only true in Dev and False in Prod Modes:
 
-    *DEBUG = 'DEV' in os.environ*
+    `DEBUG = 'DEV' in os.environ`
 
 * In Heroku - Add your config vars i.e. copy and paste values from env.py into Heroku Config Vars, and add the DISABLE_COLLECTSTATIC var:
 
@@ -439,10 +471,35 @@ The first step of deployment is setting up the JWT tokens:
 
 * Back in GitHub in the command terminal - Update the requirements file, then add, commit and push the changes.
 
-    *pip freeze > requirements.txt*
+    `pip freeze > requirements.txt`
 
 ### **Final steps**
 
 * Back in Heroku in the deploy tab: Select the Deployment Method (GitHub), select the project repository name from Github, and connect. Next in the Manual deploy section, choose the Master Branch, then click Deploy Branch.
 
 * Once complete, click "Open App" to view.
+
+[Back to top](<#table-of-contents>)
+
+## **Credits**
+
+### **Sources**
+
+- The Code Institute Advanced Front-end specialisation Django REST Framework guide was used as a basis to create and deploy this API. Inspiration was taken from the Moments walkthrough project and expanded on with new custom models and functionality.
+
+- Modifications have been made to the 'Comments' app model, and an additional 'events' & 'saved' apps along with models, serializers & views have been created by me.
+
+- [Stack Overflow](https://stackoverflow.com/)
+- [Slack](https://www.slack.com/) - for helpful tips from fellow students!
+- [ChatGPT](https://chat.openai.com/) - for spell checking the readme.
+
+
+### **Acknowledgments**
+- My mentor at Code Institute - [Martina Terlevic](https://github.com/SephTheOverwitch) for her invaluable support and insightful feedback during the development of this project.  
+- The tutors from Code Institute that helped me overcome the issues that I faced with the project.
+
+### **Media**
+- The media for this API consists of the default images, sourced from the API walkthrough and uploaded on Cloudinary.
+
+
+[Back to top](<#table-of-contents>)
