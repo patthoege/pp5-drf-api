@@ -59,14 +59,7 @@ A full list of User stories can be found [HERE](static/USERSTORIES.md)
 ## Testing
 
 ### Validators
-All files passed through [PEP8](https://ww1.pep8online.com/) without error.
-
-<details><summary><b> PEP8 Validator Image</b></summary>
-
-![PEP8 Validator Image](docs/readme/images/)
-</details><br />
-
-[Back to top](<#table-of-contents>)
+All files passed through [Code Institute PEP8 Online Python Linter](https://pep8ci.herokuapp.com/#) without error. Minor indentation and whitespace errors were corrected. No errors left.
 
 ### **Manual Testing**
 
@@ -81,7 +74,6 @@ All files passed through [PEP8](https://ww1.pep8online.com/) without error.
 | Followers | ✅ | ✅ | --- | ✅ |
 | Events | ✅ | ✅ | ✅ | ✅ |
 | Saved | ✅ | ✅ | --- | ✅ |
-
 
 #### **Testing URLs**
 
@@ -99,6 +91,16 @@ All files passed through [PEP8](https://ww1.pep8online.com/) without error.
 | /events/:id/ | ✅ |
 | /saved/ | ✅ |
 | /saved/:id/ | ✅ |
+
+[Back to top](<#table-of-contents>)
+
+### **Unit Testing**
+This test was provided thanks to the guide of the Moments walkthrough:
+- Posts List View Testing can be found [here](./posts/tests.py)
+
+- All tests passed by using the command:
+
+    `python manage.py test`
 
 [Back to top](<#table-of-contents>)
 
@@ -130,7 +132,7 @@ All files passed through [PEP8](https://ww1.pep8online.com/) without error.
 - Django Rest Auth
 - PostgreSQL
 - Cors Headers
-- draw.io: is a free online diagram software for making flowcharts, process diagrams, org charts, UML, ER and network diagrams.
+- draw.io: is a free online diagram software for making flowcharts, process diagrams, org charts, UML, ER and network diagrams. 
 
 [Back to top](<#table-of-contents>)
 
@@ -270,6 +272,34 @@ The first step of deployment is setting up the JWT tokens:
             pip freeze > requirements.txt
 
         *3: git add, commit and push.*
+
+* Bug Fix - dj-rest-auth doesn’t allow users to log out:
+
+    * In drf_api/views.py, import JWT_AUTH settings from settings.py
+        ```
+        from .settings import (
+        JWT_AUTH_COOKIE, JWT_AUTH_REFRESH_COOKIE, JWT_AUTH_SAMESITE,
+        JWT_AUTH_SECURE,
+        )
+        ```
+    * Write a logout view. It can be found [here](/pp5_drf_api/views.py)
+
+    * Import the logout view in drf_api/urls.py
+
+        `from .views import root_route, logout_route`
+
+    * Include it in the urlpatterns list, above the default dj-rest-auth urls, so that it is matched first.
+        ```
+        urlpatterns = [
+            path('', root_route),
+            path('admin/', admin.site.urls),
+            path('api-auth/', include('rest_framework.urls')),
+            path('dj-rest-auth/logout/', logout_route),
+            path('dj-rest-auth/', include('dj_rest_auth.urls')),
+            ...
+        ]
+        ```
+    * Push your code to GitHub.
 
 [Back to top](<#table-of-contents>)
 
