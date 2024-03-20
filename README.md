@@ -24,10 +24,25 @@ This project was built as my final Advanced Frontend Portfolio submission for th
     * [Frameworks, Libraries and Programs Used](#frameworks-libraries-and-programs-used)
 * [Project Setup](#project-setup)
 * [Deployment](#deployment)
+    * [Project Setup](#project-setup)
+    * [Deployment](#deployment)
+        * [JWT tokens](#jwt-tokens)
+    * [Preparing the API for deployment](#preparing-the-api-for-deployment)
+        * [Root Route](#root-route)
+        * [Pagination](#pagination)
+        * [JSON Renderer](#json-renderer)
+        * [Date and Time formatting - General Formatting](#date-and-time-formatting---general-formatting)
+        * [Date and Time formatting - Comments and Post](#date-and-time-formatting---comments-and-post)
+    * [Create PostgreSQL Database](#create-postgresql-database)
+    * [Create Heroku App](#create-heroku-app)
+    * [Project preparation for IDE](#project-preparation-for-ide)
+    * [Install package to run the project on Heroku](#install-package-to-run-the-project-on-heroku)
+    * [Heroku deployment](#heroku-deployment)
 * [Credits](#credits)
     * [Sources](#sources)
-    * [Acknowledgments](#acknowledgments)
     * [Media](#media)
+    * [Acknowledgments](#acknowledgments)
+
 
 ## User Stories
 I have included User Stories links to the [GitHub Issues](https://github.com/patthoege/pp5-drf-api/issues?page=1&q=is%3Aissue+is%3Aopen) for this project, as well as the [KANBAN board](https://github.com/users/patthoege/projects/5/views/1).
@@ -145,6 +160,7 @@ All files passed through [PEP8](https://ww1.pep8online.com/) without error.
 [Back to top](<#table-of-contents>)
 
 ## **Deployment**
+### *JWT tokens*
 
 The first step of deployment is setting up the JWT tokens:
 * First install the package in the terminal window, using the command: 
@@ -185,11 +201,9 @@ The first step of deployment is setting up the JWT tokens:
 
 * Next add the registration URLs to the urlpatterns list, as follows:
 
-    `path('dj-rest-auth/registration/',` 
+    `path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),`
 
-    `include('dj_rest_auth.registration.urls')),`
-
-* Now add JWT tokens functionality: 
+* Finally, add JWT tokens functionality: 
     * Install the djangorestframework-simplejwt package by typing the following into the terminal command window:
 
         `pip install djangorestframework-simplejwt==5.3.1`
@@ -214,53 +228,54 @@ The first step of deployment is setting up the JWT tokens:
 
 * To ensure tokens are sent over HTTPS only, add the following:
 
-    `JWT_AUTH_COOKIE = 'my-app-auth'`
+    `JWT_AUTH_SECURE = True`
 
 * Next, declare cookie names for the access and refresh tokens by adding:
     ```
-    JWT_AUTH_SECURE = True
+    JWT_AUTH_COOKIE = 'my-app-auth'
     JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
     ```
+    
+* Now we need to add the profile_id  and profile_image to fields returned when requesting logged in user’s details:
+    * Create a new serializers.py file in the api folder. Then import the following files at the top of the new serializers file and create the profile_id and profile_image fields:
 
-* Create a new serializers.py file in the api folder. Then import the following files at the top of the new serializers file:
+        ```
+        from dj_rest_auth.serializers import UserDetailsSerializer
+        from rest_framework import serializers
 
-    `from dj_rest_auth.serializers`
+        class CurrentUserSerializer(UserDetailsSerializer):
+            profile_id = serializers.ReadOnlyField(source='profile.id')
+            profile_image = serializers.ReadOnlyField(source='profile.image.url')
 
-    `import UserDetailsSerializer`
+            class Meta(UserDetailsSerializer.Meta):
+                fields = UserDetailsSerializer.Meta.fields + (
+                    'profile_id', 'profile_image'
+                )
+        ```
 
-    `from rest_framework import serializers`
+    * In settings.py, overwrite the default USER_DETAILS_SERIALIZER, below the JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token' :
 
-* Next create the profile_id and profile_image fields:
-    ```
-    class CurrentUserSerializer(UserDetailsSerializer):
-        profile_id = serializers.ReadOnlyField(source='profile.id')
-        profile_image = serializers.ReadOnlyField(source='profile.image.url')
-        class Meta(UserDetailsSerializer.Meta):
-            fields = UserDetailsSerializer.Meta.fields + ('profile_id', 'profile_image')
-    ```
+        ```
+        REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER': 'drf_api.serializers.CurrentUserSerializer'}
+        ```
 
+    * Next, in the terminal command window:
 
-* Overwrite the default USER_DETAILS_SERIALIZER - Place below the 
-    ```
-    JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token':
+        *1: Run migrations*
 
-    REST_AUTH_SERIALIZERS = {'USER_DETAILS_SERIALIZER': 'drf_api.serializers.CurrentUserSerializer'}
-    ```
+            python manage.py migrate
 
-* Next, in the terminal command window:
+        *2: Update the requirements text file:*
+            
+            pip freeze > requirements.txt
 
-    *1: Run migrations*
+        *3: git add, commit and push.*
 
-        python manage.py migrate
+[Back to top](<#table-of-contents>)
 
-    *2: Update the requirements text file:*
-        
-        pip freeze > requirements.txt
+## **Preparing the API for deployment**
 
-    *3: git add, commit and push.*
-
-
-### **Adding the root route:**
+### *Root Route*
 * Create a views.py file in the API folder. Set up the imports in the views.py file:
 
     `from rest_framework.decorators import api_view`
@@ -285,10 +300,11 @@ The first step of deployment is setting up the JWT tokens:
     path('', root_route)
     ]
     ```
+* In the root route, no longer displays the 404 Error  
 
-### **Adding JSON Renderer**
+### *Pagination*
 
-* In the settings.py file, add Pagination:
+* In the settings.py file, inside the REST_FRAMEWORK object, add Pagination:
 
     ```
     REST_FRAMEWORK = {
@@ -298,7 +314,7 @@ The first step of deployment is setting up the JWT tokens:
     }
     ```
 
-### **Adding Pagination**
+### *JSON Renderer*
 
 * In the settings.py file, set JSON Renderer if Dev environment is not present. Placed below, but separate from, the REST_FRAMEWORK list:
 
@@ -313,7 +329,7 @@ The first step of deployment is setting up the JWT tokens:
         ]
     ```
 
-### **Date and time formatting - General Formatting:**
+### *Date and Time formatting - General Formatting*
 
 * In the settings.py file, format the Date and time in REST_FRAMEWORK list:
 
@@ -324,13 +340,13 @@ The first step of deployment is setting up the JWT tokens:
     }
     ```
 
-### **Date and time formatting - Comments and Post:**
+### *Date and Time formatting - Comments and Post*
 
-* In the reply app, create the serializers.py app. Then set the imports up in the file:
+* In the Comment app, inside the serializers.py file. Then set the imports up in the file:
     
     `from django.contrib.humanize.templatetags.humanize import naturaltime`
 
-* Set fields within the ReplySerializer class:
+* Set fields within the Serializer class:
 
     `created_at = serializers.SerializerMethodField()`
 
@@ -347,17 +363,37 @@ The first step of deployment is setting up the JWT tokens:
     ```
 * Next add, commit, and push the new additions.
 
-### **Create Heroku App with Heroku PostGres**
+[Back to top](<#table-of-contents>)
 
-* Log into Heroku, and create a new app. (The name must be unique)
+## **Create PostgreSQL Database**
 
-* Log in to your ElephantSQL account, and click "create new instance".
+* Log in to ElephantSQL.com to access your dashboard
 
-* Set up your plan:
+* Click “Create New Instance”
+
+* Set up your plan
+
     * Give your plan a Name (this is commonly the name of the project)
     * Select the Tiny Turtle (Free) plan
     * You can leave the Tags field blank
 
+* Select “Select Region”
+
+* Select a data center near you
+
+* Then click “Review”
+
+* Check your details are correct and then click “Create instance”
+
+* Return to the ElephantSQL dashboard and click on the database instance name for this project
+
+* In the URL section, click the copy icon to copy the database URL
+
+[Back to top](<#table-of-contents>)
+
+## **Create Heroku App**
+
+* Log into Heroku, and create a new app. (The name must be unique)
 
 * Click “Select Region”, then click “Review” and then click "Create instance".
 
@@ -365,61 +401,96 @@ The first step of deployment is setting up the JWT tokens:
 
 * Copy your ElephantSQL database URL using the Copy icon. It will start with postgres://
 
-### **In heroku.com**
+* Open the Settings tab, and click "Reveal config vars".
 
-* Open your App in Heroku, go to the settings tab, and click "Reveal config vars".
+* Add a Config Var DATABASE_URL, and for the value, copy in your database URL from ElephantSQL (do not add quotation marks)
 
-* Add a Config Var called DATABASE_URL: The value should be the ElephantSQL database URL.
 
-### **Install and configure extra libraries and connect to your database:**
+[Back to top](<#table-of-contents>)
 
-* Install dj_database_url by typing in the command terminal window:
+## **Project preparation for IDE**
 
-    `pip install dj_database_url`
+* In the terminal, install dj_database_url and psycopg2, both of these are needed to connect to your external database:
 
-* In the settings.py file, import the following:
+    `pip3 install dj_database_url==0.5.0 psycopg2`
 
+* In settings.py file, import dj_database_url underneath the import for os:
+
+    `import os`
     `import dj_database_url`
 
-* Separate the Dev and Prod Environments, as follows:
-
+* Update the DATABASES section to the following:
     ```
-    DATABASES = {
-    'default': ({
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    } if 'DEV' in os.environ else dj_database_url.parse(
-        os.environ.get('DATABASE_URL')
-    ))
-    }
-    ```
+    if 'DEV' in os.environ:
+     DATABASES = {
+         'default': {
+             'ENGINE': 'django.db.backends.sqlite3',
+             'NAME': BASE_DIR / 'db.sqlite3',
+         }
+     }
+    else:
+        DATABASES = {
+            'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+        }
+     ```
 
-* Next, install gunicorn. By typing in the command terminal:
+    This ensures that when you have an environment variable for DEV in your environment the code will connect to the sqlite database here in your IDE. Otherwise it will connect to your external database, provided the DATABASE_URL environment variable exist.
 
-    `pip install gunicorn`
+* In the env.py file, add a new environment variable with the key set to DATABASE_URL, and the value to your ElephantSQL database URL:
+ 
+    `os.environ['DATABASE_URL'] = "<your PostgreSQL URL here>"`
+
+* Temporarily comment out the DEV environment variable so that the IDE can connect to my external database
+
+* Migrate your database models to your new database:
+
+    `python3 manage.py migrate`
+
+* Create a superuser for your new database and follow the steps to create your superuser username and password:
+
+    `python3 manage.py createsuperuser`
+
+* Confirming database:
+
+    * On the ElephantSQL page for your database, in the left side navigation, select “BROWSER”
+
+    * Click the Table queries button, select auth_user
+
+    * Click “Execute”, it should display the new created superuser details. This confirms the tables have been created and can add data to the database
+
+
+[Back to top](<#table-of-contents>)
+
+## **Install package to run the project on Heroku**
+
+* In the terminal of your IDE workspace, install gunicorn:
+
+    `pip3 install gunicorn django-cors-headers`
+
+* Update your requirements.txt:
+
+    ` pip freeze --local > requirements.txt`
 
 * Create Procfile (noting the capital "P"). Inside the file add:
     
     `release: python manage.py makemigrations && python manage.py migrate`
 
-    `web: gunicorn drf_api.wsgi`
+    `web: gunicorn drf_api.wsgi` ``
 
-* In the settings.py, set the "ALLOWED_HOSTS" to:
+* In the settings.py, update the value of "ALLOWED_HOSTS" to:
 
-    `['<YOURAPPNAME>.herokuapp.com', 'localhost']`
+    `ALLOWED_HOSTS = ['localhost', '<your_app_name>.herokuapp.com']`
 
 * In the command terminal, install CORS, by typing:
     `pip install django-cors-headers`
 
-* Then add to "INSTALLED_APPS" section in settings.py:
+* Add corsheaders to INSTALLED_APPS:
 
     ``` 
     INSTALLED_APPS = [
     ...
     'dj_rest_auth.registration',
     'corsheaders',
-
-    'profiles',
     ...
     ]
     ```
@@ -446,38 +517,63 @@ The first step of deployment is setting up the JWT tokens:
 
     ```
 
+* Enable sending cookies in cross-origin requests so that users can get authentication functionality:
+    ```
+    else:
+     CORS_ALLOWED_ORIGIN_REGEXES = [
+         r"^https://.*\.gitpod\.io$",
+     ]
+
+    CORS_ALLOW_CREDENTIALS = True
+    ```
+
 * Allow Cookies and allow front end app and API be deployed to different platforms:
+    ```
+    JWT_AUTH_COOKIE = 'my-app-auth'
+    JWT_AUTH_REFRESH_COOKE = 'my-refresh-token'
+    JWT_AUTH_SAMESITE = 'None'
+    ```
 
-    `CORS_ALLOW_CREDENTIALS = True`, 
-    `JWT_AUTH_SAMESITE = 'None'`
+* Remove the value for SECRET_KEY and replace with the following code to use an environment variable instead:
 
-* Set the remaining env variables:
+    `# SECURITY WARNING: keep the secret key used in production secret!`
 
-    `os.environ['SECRET_KEY'] = 'CreateRandomValue'`
+    `SECRET_KEY = os.getenv('SECRET_KEY')`
 
-* In the settings.py file - replace the ‘insecure’ key with the environment variable:
+* Set a NEW value for your SECRET_KEY environment variable in env.py, do NOT use the same one that has been published to GitHub in your commits:
 
-    `SECRET_KEY = os.environ.get('SECRET_KEY')`
+    `os.environ.setdefault("SECRET_KEY", "CreateANEWRandomValueHere")`
 
 * Replace the DEBUG Setting to be only true in Dev and False in Prod Modes:
 
     `DEBUG = 'DEV' in os.environ`
 
+* Comment DEV back in env.py
+
+* Ensure the project requirements.txt file is up to date:
+
+    `pip freeze --local > requirements.txt`
+
+* Add, commit and push your code to GitHub
+
+
+[Back to top](<#table-of-contents>)
+
+## **Heroku deployment**
+
 * In Heroku - Add your config vars i.e. copy and paste values from env.py into Heroku Config Vars, and add the DISABLE_COLLECTSTATIC var:
 
-    *CLOUDINARY_URL, SECRET_KEY*
+    *CLOUDINARY_URL*
+    
+    *SECRET_KEY*
 
     *DISABLE_COLLECTSTATIC = 1*
 
-* Back in GitHub in the command terminal - Update the requirements file, then add, commit and push the changes.
+* In the deploy tab: 
 
-    `pip freeze > requirements.txt`
+    * Select the Deployment Method (GitHub), select the project repository name from Github, and connect. Next in the Manual deploy section, choose the Master Branch, then click Deploy Branch.
 
-### **Final steps**
-
-* Back in Heroku in the deploy tab: Select the Deployment Method (GitHub), select the project repository name from Github, and connect. Next in the Manual deploy section, choose the Master Branch, then click Deploy Branch.
-
-* Once complete, click "Open App" to view.
+* Once complete, click "Open App" to view
 
 [Back to top](<#table-of-contents>)
 
@@ -493,13 +589,15 @@ The first step of deployment is setting up the JWT tokens:
 - [Slack](https://www.slack.com/) - for helpful tips from fellow students!
 - [ChatGPT](https://chat.openai.com/) - for spell checking the readme.
 
+### **Media**
+- The media for this API consists of the default images, sourced from the API walkthrough and uploaded on Cloudinary.
 
 ### **Acknowledgments**
 - My mentor at Code Institute - [Martina Terlevic](https://github.com/SephTheOverwitch) for her invaluable support and insightful feedback during the development of this project.  
 - The tutors from Code Institute that helped me overcome the issues that I faced with the project.
 
-### **Media**
-- The media for this API consists of the default images, sourced from the API walkthrough and uploaded on Cloudinary.
+Best wishes and happy coding!
 
+Patricia Hoege
 
 [Back to top](<#table-of-contents>)
