@@ -15,7 +15,7 @@ class Profile(models.Model):
     bio = models.TextField(null=True, blank=True)
     content = models.TextField(blank=True)
     image = models.ImageField(
-        upload_to='images/', 
+        upload_to='images/',
         default='../default_profile_thf96f'
     )
 
@@ -30,7 +30,7 @@ class Profile(models.Model):
         Changing display name from ID to username.
         """
         return f"{self.owner}'s profile"
-    
+
 
 def create_profile(sender, instance, created, **kwargs):
     """
@@ -39,5 +39,6 @@ def create_profile(sender, instance, created, **kwargs):
     """
     if created:
         Profile.objects.create(owner=instance)
+
 
 post_save.connect(create_profile, sender=User)

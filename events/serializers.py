@@ -23,19 +23,19 @@ class EventSerializer(serializers.ModelSerializer):
         return request.user == obj.owner
 
     def get_save_id(self, obj):
-            user = self.context['request'].user
-            if user.is_authenticated:
-                save = Save.objects.filter(
-                    owner = user, event = obj
-                ).first()
-                return save.id if save else None
-            return None
+        user = self.context['request'].user
+        if user.is_authenticated:
+            save = Save.objects.filter(
+                owner=user, event=obj
+            ).first()
+            return save.id if save else None
+        return None
 
     class Meta:
         model = Event
         fields = [
-            'id', 'owner', 'title', 'content', 'date', 'time', 
-            'place', 'event_link', 'category', 'created_on', 
-            'modified_on','is_owner', 'profile_id', 'profile_image',
+            'id', 'owner', 'title', 'content', 'date', 'time',
+            'place', 'event_link', 'category', 'created_on',
+            'modified_on', 'is_owner', 'profile_id', 'profile_image',
             'save_id', 'saved_count', 'comments_count'
         ]

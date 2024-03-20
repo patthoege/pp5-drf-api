@@ -13,6 +13,7 @@ def root_route(request):
         "message": "Welcome to the ExposePX API!!"
     })
 
+
 # Code provided in DRF-API walkthrough.
 # dj-rest-auth logout view fix
 @api_view(['POST'])
