@@ -65,6 +65,7 @@ DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
     'localhost',
+    '127.0.0.1',
     'p5-drf-api-50dd27c53894.herokuapp.com',
     '8000-patthoege-pp5drfapi-9jaxdhejpo9.ws-eu108.gitpod.io',
 ]
@@ -173,7 +174,15 @@ WSGI_APPLICATION = 'pp5_drf_api.wsgi.application'
 #         'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 #     }
 
-DATABASES = {'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))}
+# DATABASES = {'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))}
+
+DATABASES = {
+    'default': dj_database_url.parse(
+        os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -212,6 +221,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]  # local static files
+STATIC_ROOT = BASE_DIR / "staticfiles" 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
