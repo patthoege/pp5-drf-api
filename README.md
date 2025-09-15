@@ -127,7 +127,7 @@ This test was provided thanks to the guide of the Moments walkthrough:
 - Django
 - Django RestFramework
 - Cloudinary
-- Heroku
+- Heroku - Replaced with Render 
 - Pillow
 - Django Rest Auth
 - PostgreSQL
@@ -421,7 +421,7 @@ The first step of deployment is setting up the JWT tokens:
 
 [Back to top](<#table-of-contents>)
 
-## **Create Heroku App**
+## **Create Heroku App** -- Replaced with render
 
 * Log into Heroku, and create a new app. (The name must be unique)
 
@@ -437,6 +437,36 @@ The first step of deployment is setting up the JWT tokens:
 
 
 [Back to top](<#table-of-contents>)
+
+## Create a new Render Web Service App
+	1.	Login to Render.com.
+	2.	Go to Render.
+	3.	Create a New Web Service → connect your GitHub repo.
+	4.	Set build & start commands:
+	•	Build Command:
+    3. Add Environment Variables
+
+    In Render dashboard → your Web Service → Environment tab. Add:
+        •	SECRET_KEY=your-django-secret
+        •	DATABASE_URL=postgresql://...
+
+    Now you can choose:
+        •	Use Render Postgres: Create a free Postgres instance in Render → copy the internal DATABASE_URL.
+        •	Or keep Supabase: Copy your Supabase DATABASE_URL (with encoded password).
+
+    Then also add:
+        •	CLOUDINARY_URL=your-cloudinary-url
+        •	CLIENT_ORIGIN=https://<your-frontend>.vercel.app
+    5. Allow your Render domain
+    In settings.py, add your Render domain to ALLOWED_HOSTS, e.g.:
+        ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'your-service.onrender.com',
+    ]
+
+    [Back to top](<#table-of-contents>)
+
 
 ## **Project preparation for IDE**
 
