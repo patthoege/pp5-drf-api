@@ -184,9 +184,18 @@ WSGI_APPLICATION = 'pp5_drf_api.wsgi.application'
 
 # DATABASES = {'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))}
 
+from urllib.parse import unquote
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable is not set!")
+
+# Decode percent-encoded characters in the URL (especially in password)
+DATABASE_URL = unquote(DATABASE_URL)
+
 DATABASES = {
     'default': dj_database_url.parse(
-        os.environ.get("DATABASE_URL"),
+        DATABASE_URL,
         conn_max_age=600,
         ssl_require=True
     )
