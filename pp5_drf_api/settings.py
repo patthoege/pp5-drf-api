@@ -66,23 +66,31 @@ DEBUG = 'DEV' in os.environ
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'p5-drf-api-50dd27c53894.herokuapp.com',
+    # 'p5-drf-api-50dd27c53894.herokuapp.com',
     '8000-patthoege-pp5drfapi-9jaxdhejpo9.ws-eu108.gitpod.io',
 ]
 
+# If CLIENT_ORIGIN is not set yet, allow all origins temporarily (safe only for initial backend deployment)
 if 'CLIENT_ORIGIN' in os.environ:
-    CORS_ALLOWED_ORIGINS = [
-        os.environ.get('CLIENT_ORIGIN')
-    ]
-if 'CLIENT_ORIGIN_DEV' in os.environ:
-    extracted_url = re.match(
-        r'^.+-',
-        os.environ.get('CLIENT_ORIGIN_DEV', ''),
-        re.IGNORECASE
-    ).group(0)
-    CORS_ALLOWED_ORIGIN_REGEXES = [
-        rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
-    ]
+    CORS_ALLOWED_ORIGINS = [os.environ.get('CLIENT_ORIGIN')]
+else:
+    CORS_ALLOW_ALL_ORIGINS = True  # temporarily allow all origins
+
+CORS_ALLOW_CREDENTIALS = True
+
+# if 'CLIENT_ORIGIN' in os.environ:
+#     CORS_ALLOWED_ORIGINS = [
+#         os.environ.get('CLIENT_ORIGIN')
+#     ]
+# if 'CLIENT_ORIGIN_DEV' in os.environ:
+#     extracted_url = re.match(
+#         r'^.+-',
+#         os.environ.get('CLIENT_ORIGIN_DEV', ''),
+#         re.IGNORECASE
+#     ).group(0)
+#     CORS_ALLOWED_ORIGIN_REGEXES = [
+#         rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
+#     ]
 
 CORS_ALLOW_CREDENTIALS = True
 
