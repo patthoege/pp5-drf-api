@@ -69,10 +69,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    # 'p5-drf-api-50dd27c53894.herokuapp.com',
-    '8000-patthoege-pp5drfapi-9jaxdhejpo9.ws-eu108.gitpod.io',
+    # 'localhost',
+    # '127.0.0.1',
+    # # 'p5-drf-api-50dd27c53894.herokuapp.com',
+    # '8000-patthoege-pp5drfapi-9jaxdhejpo9.ws-eu108.gitpod.io',
+    '*',
 ]
 
 # If CLIENT_ORIGIN is not set yet, allow all origins temporarily (safe only for initial backend deployment)
