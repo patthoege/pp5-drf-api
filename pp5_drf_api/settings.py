@@ -131,6 +131,7 @@ SITE_ID = 1
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -159,7 +160,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pp5_drf_api.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -170,26 +170,28 @@ WSGI_APPLICATION = 'pp5_drf_api.wsgi.application'
 #     }
 # }
 
-# if 'DEV' in os.environ:
-#      DATABASES = {
-#          'default': {
-#              'ENGINE': 'django.db.backends.sqlite3',
-#              'NAME': BASE_DIR / 'db.sqlite3',
-#          }
-#      }
-# else:
-#     DATABASES = {
-#         'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
-#     }
+if 'DEV' in os.environ:
+     DATABASES = {
+         'default': {
+             'ENGINE': 'django.db.backends.sqlite3',
+             'NAME': BASE_DIR / 'db.sqlite3',
+         }
+     }
+else:
+    DATABASES = {
+        'default': {
+             'ENGINE': 'django.db.backends.postgresql',
+             'NAME': os.environ.get('DB_NAME'),
+             'USER': os.environ.get('DB_USER'),
+             'PASSWORD': os.environ.get('DB_PASSWORD'),
+             'HOST': os.environ.get('DB_HOST'),
+             'PORT': os.environ.get('DB_PORT'),
+         }
+    }
+ # DATABASES = {
+    #     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    # }
 
-# DATABASES = {'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))}
-
-# Database
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
-    )
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -208,7 +210,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
