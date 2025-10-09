@@ -14,9 +14,14 @@ from pathlib import Path
 import os
 import dj_database_url
 import re
+from dotenv import load_dotenv
 
-if os.path.exists('env.py'):
-    import env
+# Load environment variables from .env file
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
+
+# if os.path.exists('env.py'):
+#     import env
 
 CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')

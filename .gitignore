@@ -4,6 +4,7 @@ core.python*
 env.py
 venv/
 venv
+.env
 __pycache__/
 *.py[cod]
 node_modules/
