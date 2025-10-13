@@ -75,13 +75,24 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
-# If CLIENT_ORIGIN is not set yet, allow all origins temporarily (safe only for initial backend deployment)
-if 'CLIENT_ORIGIN' in os.environ:
-    CORS_ALLOWED_ORIGINS = [os.environ.get('CLIENT_ORIGIN')]
-else:
-    CORS_ALLOW_ALL_ORIGINS = True  # temporarily allow all origins
-
+# --- CORS SETTINGS ---
 CORS_ALLOW_CREDENTIALS = True
+
+client_origin = os.environ.get('CLIENT_ORIGIN')
+client_origin_dev = os.environ.get('CLIENT_ORIGIN_DEV')
+
+if client_origin and client_origin_dev:
+    CORS_ALLOWED_ORIGINS = [client_origin, client_origin_dev]
+elif client_origin:
+    CORS_ALLOWED_ORIGINS = [client_origin]
+else:
+    CORS_ALLOW_ALL_ORIGINS = True  # fallback only for first deployment
+
+# --- COOKIE & CSRF SETTINGS ---
+CSRF_TRUSTED_ORIGINS = [
+    'https://web-production-278a3.up.railway.app',
+    'https://web-production-b140a.up.railway.app',
+]
 
 # if 'CLIENT_ORIGIN' in os.environ:
 #     CORS_ALLOWED_ORIGINS = [
