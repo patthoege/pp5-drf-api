@@ -69,11 +69,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
-    # 'localhost',
-    # '127.0.0.1',
-    # # 'p5-drf-api-50dd27c53894.herokuapp.com',
-    # '8000-patthoege-pp5drfapi-9jaxdhejpo9.ws-eu108.gitpod.io',
-    '*',
+    'https://web-production-278a3.up.railway.app', #railway backend deployment
+    'https://web-production-b140a.up.railway.app', #railway frontend deployment
+    "http://localhost:3000", 
 ]
 
 # If CLIENT_ORIGIN is not set yet, allow all origins temporarily (safe only for initial backend deployment)
@@ -97,8 +95,6 @@ CORS_ALLOW_CREDENTIALS = True
 #     CORS_ALLOWED_ORIGIN_REGEXES = [
 #         rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
 #     ]
-
-CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
