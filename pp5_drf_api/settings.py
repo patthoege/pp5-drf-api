@@ -69,9 +69,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
-    'https://web-production-278a3.up.railway.app', #railway backend deployment
-    'https://web-production-b140a.up.railway.app', #railway frontend deployment
-    "http://localhost:3000", 
+    'web-production-278a3.up.railway.app',  # backend
+    'web-production-b140a.up.railway.app',  # frontend
+    'localhost',
+    '127.0.0.1',
 ]
 
 # If CLIENT_ORIGIN is not set yet, allow all origins temporarily (safe only for initial backend deployment)
