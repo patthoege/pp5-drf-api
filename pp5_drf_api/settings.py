@@ -69,8 +69,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
-    'web-production-278a3.up.railway.app',  # backend
-    'web-production-b140a.up.railway.app',  # frontend
+    'pp5-backend-api.up.railway.app',
+    'frontend-exposurepx.up.railway.app',
     'localhost',
     '127.0.0.1',
 ]
@@ -94,8 +94,8 @@ else:
 
 # --- COOKIE & CSRF SETTINGS ---
 CSRF_TRUSTED_ORIGINS = [
-    'https://web-production-278a3.up.railway.app',
-    'https://web-production-b140a.up.railway.app',
+    'https://pp5-backend-api.up.railway.app',
+    'https://frontend-exposurepx.up.railway.app',
 ]
 
 # if 'CLIENT_ORIGIN' in os.environ:
