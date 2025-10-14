@@ -246,7 +246,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # Where collectstatic will put all static files
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # Optional: where your own local static files live (if you have any)
-STATICFILES_STORAGE = "whitenoise.storage.StaticFilesStorage" # Recommended storage backend for Railway + Whitenoise
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage" # Recommended storage backend for Railway + Whitenoise
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
