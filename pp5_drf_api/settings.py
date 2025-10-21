@@ -14,14 +14,9 @@ from pathlib import Path
 import os
 import dj_database_url
 import re
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / '.env')
-
-# if os.path.exists('env.py'):
-#     import env
+if os.path.exists('env.py'):
+    import env
 
 CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
@@ -76,7 +71,7 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://*.railway.app',
+    'https://frontend-exposurepx.up.railway.app',
 ]
 
 # --- CORS SETTINGS ---
@@ -188,29 +183,21 @@ WSGI_APPLICATION = 'pp5_drf_api.wsgi.application'
 #     }
 # }
 
-if 'DEV' in os.environ:
-     DATABASES = {
-         'default': {
-             'ENGINE': 'django.db.backends.sqlite3',
-             'NAME': BASE_DIR / 'db.sqlite3',
-         }
-     }
-else:
-    DATABASES = {
-            'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
-        }
+# if 'DEV' in os.environ:
+#      DATABASES = {
+#          'default': {
+#              'ENGINE': 'django.db.backends.sqlite3',
+#              'NAME': BASE_DIR / 'db.sqlite3',
+#          }
+#      }
+# else:
+#     DATABASES = {
+#             'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+#         }
     
-    # DATABASES = {
-    #     'default': {
-    #          'ENGINE': 'django.db.backends.postgresql',
-    #          'NAME': os.environ.get('DB_NAME'),
-    #          'USER': os.environ.get('DB_USER'),
-    #          'PASSWORD': os.environ.get('DB_PASSWORD'),
-    #          'HOST': os.environ.get('DB_HOST'),
-    #          'PORT': os.environ.get('DB_PORT'),
-    #      }
-    # }
-
+DATABASES = {
+    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
